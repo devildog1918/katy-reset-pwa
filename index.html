@@ -31,24 +31,20 @@
     </div>
   </div>
 
-  <script>
-    // Register SW (must be on same origin and in scope)
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        try {
-          const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
-          const controlled = !!navigator.serviceWorker.controller;
-          document.getElementById("installStatus").textContent =
-            "Install status: service worker " + (controlled ? "active ✅" : "registered (refresh once) ⏳");
-        } catch (e) {
-          document.getElementById("installStatus").textContent =
-            "Install status: service worker failed ❌";
-        }
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js")
+      .then(function () {
+        document.getElementById("installStatus").textContent =
+          "Install status: service worker active";
+      })
+      .catch(function () {
+        document.getElementById("installStatus").textContent =
+          "Install status: service worker failed";
       });
-    } else {
-      document.getElementById("installStatus").textContent =
-        "Install status: service worker not supported ❌";
-    }
-  </script>
+  });
+}
+</script>
 </body>
 </html>
