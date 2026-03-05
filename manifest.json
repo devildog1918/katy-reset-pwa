@@ -1,10 +1,11 @@
 {
-  "name": "Katy ISD Password Reset",
-  "short_name": "Katy Reset",
+  "name": "Katy Password Reset",
+  "short_name": "Reset",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#9f3323",
+  "theme_color": "#0055a5",
   "icons": [
     {
       "src": "icons/icon-192.png",
