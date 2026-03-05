@@ -1,95 +1,54 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<head>
-<link rel="manifest" href="manifest.json">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b5fff" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <title>Katy ISD Password Reset</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<meta name="theme-color" content="#0055a5">
-
-<title>Katy ISD Password Reset</title>
-
-<style>
-
-body{
-font-family:Arial;
-margin:0;
-background:#f2f2f2;
-text-align:center;
-}
-
-.header{
-background:#9f3323;
-color:white;
-padding:18px;
-font-size:20px;
-font-weight:bold;
-}
-
-.container{
-padding:20px;
-}
-
-.button{
-background:#9f3323;
-color:white;
-padding:16px;
-border-radius:8px;
-text-decoration:none;
-display:block;
-margin:20px auto;
-width:80%;
-max-width:300px;
-font-size:18px;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:10px;
-margin-top:20px;
-}
-
-</style>
-
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background:#f2f2f2; }
+    .wrap { max-width: 680px; margin: 40px auto; padding: 0 16px; }
+    .card { background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 6px 24px rgba(0,0,0,.08); }
+    h1 { margin: 0 0 8px; font-size: 22px; }
+    p { margin: 0 0 14px; color:#333; line-height: 1.35; }
+    a.btn { display:inline-block; background:#0b5fff; color:#fff; text-decoration:none; padding: 12px 14px; border-radius: 12px; font-weight: 700; }
+    .small { margin-top: 10px; font-size: 12px; color:#666; }
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Katy ISD Password Reset</h1>
+      <p>Tap the button to open the password reset site.</p>
 
-<div class="header">
-Katy ISD Password Reset
-</div>
+      <!-- CHANGE THIS URL to your real reset URL -->
+      <a class="btn" href="https://example.com" target="_blank" rel="noopener">Open Reset Site</a>
 
-<div class="container">
+      <div class="small" id="installStatus">Install status: checking…</div>
+    </div>
+  </div>
 
-<a class="button" href="https://launchpad.classlink.com/resetpassword?scode=katyisd">
-Reset Password
-</a>
-
-<div class="card">
-
-<h3>Help Desk</h3>
-
-<p>(281) 237-HELP (4357)</p>
-
-<h3>Password Requirements</h3>
-
-<p>
-• Minimum 12 characters<br>
-• Uppercase letter<br>
-• Lowercase letter<br>
-• Number<br>
-• Special character
-</p>
-
-</div>
-
-</div>
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js");
-  }
-</script>
+  <script>
+    // Register SW (must be on same origin and in scope)
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try {
+          const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+          const controlled = !!navigator.serviceWorker.controller;
+          document.getElementById("installStatus").textContent =
+            "Install status: service worker " + (controlled ? "active ✅" : "registered (refresh once) ⏳");
+        } catch (e) {
+          document.getElementById("installStatus").textContent =
+            "Install status: service worker failed ❌";
+        }
+      });
+    } else {
+      document.getElementById("installStatus").textContent =
+        "Install status: service worker not supported ❌";
+    }
+  </script>
 </body>
 </html>
