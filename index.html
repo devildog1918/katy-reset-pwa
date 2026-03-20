@@ -14,18 +14,15 @@
   <meta name="apple-mobile-web-app-title" content="Katy Reset" />
 
   <title>Katy ISD Password Reset</title>
-  
-<button id="installBtn" class="btn secondary" style="display:none;">
-  Install App
-</button>
-  
+
   <style>
     :root{
       --brand:#9f3323;
-      --bg:#f2f2f2;
+      --bg:#f3f3f3;
       --card:#ffffff;
       --text:#222222;
       --muted:#666666;
+      --border:#dddddd;
     }
 
     * { box-sizing: border-box; }
@@ -39,28 +36,51 @@
 
     .header {
       background: var(--brand);
-      color: #ffffff;
+      color: white;
       padding: 18px 16px;
       font-size: 20px;
-      font-weight: 700;
+      font-weight: bold;
       text-align: center;
     }
 
     .wrap {
-      max-width: 720px;
-      margin: 24px auto;
-      padding: 0 16px;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px;
     }
 
     .banner {
       display: none;
       background: var(--brand);
-      color: #ffffff;
+      color: #fff;
       border-radius: 12px;
       padding: 12px 14px;
       margin-bottom: 16px;
-      font-weight: 700;
+      font-weight: bold;
       text-align: center;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--brand);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tab-btn.active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
     }
 
     .card {
@@ -68,6 +88,14 @@
       border-radius: 16px;
       padding: 20px;
       box-shadow: 0 6px 24px rgba(0,0,0,.08);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
     }
 
     h1, h2, h3 {
@@ -78,28 +106,30 @@
       line-height: 1.45;
     }
 
+    ul {
+      padding-left: 20px;
+    }
+
     .btn {
       display: block;
       width: 100%;
-      max-width: 320px;
-      margin: 18px auto 0;
+      max-width: 340px;
+      margin: 14px auto 0;
       background: var(--brand);
-      color: #ffffff;
+      color: white;
       text-decoration: none;
       padding: 14px 16px;
       border-radius: 12px;
-      font-weight: 700;
+      font-weight: bold;
       text-align: center;
+      border: none;
+      cursor: pointer;
     }
 
     .btn.secondary {
-      background: #ffffff;
+      background: #fff;
       color: var(--brand);
       border: 2px solid var(--brand);
-    }
-
-    .section {
-      margin-top: 22px;
     }
 
     .small {
@@ -109,8 +139,29 @@
       text-align: center;
     }
 
-    ul {
-      padding-left: 20px;
+    .section {
+      margin-top: 20px;
+    }
+
+    .install-note {
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .status-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fafafa;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 640px) {
+      .header {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
@@ -120,25 +171,40 @@
   <div class="wrap">
     <div id="outageBanner" class="banner"></div>
 
+    <div class="tabs">
+      <button class="tab-btn active" data-view="homeView">Home</button>
+      <button class="tab-btn" data-view="rulesView">Password Rules</button>
+      <button class="tab-btn" data-view="helpView">Help</button>
+      <button class="tab-btn" data-view="aboutView">About</button>
+    </div>
+
     <div class="card">
-      <h1>Katy ISD Password Reset</h1>
-      <p>Use the button below to open the official ClassLink password reset page.</p>
+      <div id="homeView" class="view active">
+        <h1>Katy ISD Password Reset</h1>
+        <p>Use the button below to open the official ClassLink password reset page.</p>
 
-      <a class="btn"
-   href="https://launchpad.classlink.com/resetpassword?scode=katyisd"
-   rel="noopener noreferrer">
-   Reset Password
-</a>
+        <a class="btn"
+           href="https://launchpad.classlink.com/resetpassword?scode=katyisd"
+           rel="noopener noreferrer">
+           Reset Password
+        </a>
 
-      <a class="btn secondary"
-         href="tel:2812374357">
-         Call Help Desk
-      </a>
+        <button id="installBtn" class="btn secondary" style="display:none;">
+          Install App
+        </button>
 
-      <p class="small">Help Desk: (281) 237-HELP (4357)</p>
+        <div class="install-note" id="installNote">
+          Android: Chrome menu or address bar install icon<br>
+          iPhone: Safari → Share → Add to Home Screen
+        </div>
 
-      <div class="section">
-        <h3>Password Requirements</h3>
+        <div class="status-box">
+          <strong>Status:</strong> This page is the district-branded launch page for the official ClassLink password reset site.
+        </div>
+      </div>
+
+      <div id="rulesView" class="view">
+        <h2>Password Requirements</h2>
         <ul>
           <li>Must be at least twelve characters long</li>
           <li>Cannot reuse any of the prior 20 passwords</li>
@@ -153,43 +219,40 @@
         </ul>
       </div>
 
-      <div class="section">
-        <h3>Install on your phone</h3>
-        <p><strong>Android:</strong> Chrome → menu → Install app / Add to Home screen</p>
-        <p><strong>iPhone:</strong> Safari → Share → Add to Home Screen</p>
+      <div id="helpView" class="view">
+        <h2>Help Desk</h2>
+        <p>If you need assistance, contact the Technology Help Desk.</p>
+
+        <a class="btn secondary" href="tel:2812374357">
+          Call Help Desk
+        </a>
+
+        <p class="small">Help Desk: (281) 237-HELP (4357)</p>
+      </div>
+
+      <div id="aboutView" class="view">
+        <h2>About This App</h2>
+        <p>This is a district-branded Progressive Web App (PWA) that provides mobile-friendly access to the official ClassLink password reset page.</p>
+        <p>It does not store passwords or process authentication directly. All password reset actions occur within ClassLink.</p>
       </div>
     </div>
   </div>
-<script>
-  let deferredPrompt = null;
-  const installBtn = document.getElementById("installBtn");
 
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = "block";
-  });
-
-  installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    installBtn.style.display = "none";
-  });
-
-  window.addEventListener("appinstalled", () => {
-    installBtn.style.display = "none";
-    deferredPrompt = null;
-  });
-
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js");
-    });
-  }
-</script>
   <script>
+    // Tabs / views
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const views = document.querySelectorAll(".view");
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        views.forEach((v) => v.classList.remove("active"));
+
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.view).classList.add("active");
+      });
+    });
+
     // Outage banner via URL:
     // ?outage=1&msg=Password%20reset%20may%20be%20temporarily%20unavailable
     const params = new URLSearchParams(window.location.search);
@@ -202,6 +265,30 @@
       banner.style.display = "block";
     }
 
+    // Install button for Android/Chromium browsers when available
+    let deferredPrompt = null;
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = "block";
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    });
+
+    window.addEventListener("appinstalled", () => {
+      installBtn.style.display = "none";
+      deferredPrompt = null;
+    });
+
+    // Service worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("./sw.js");
