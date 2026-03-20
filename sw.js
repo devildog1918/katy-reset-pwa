@@ -1,4 +1,4 @@
-const CACHE_NAME = "katy-reset-v5";
+const CACHE_NAME = "katy-reset-v6";
 const ASSETS = [
   "./",
   "./index.html",
@@ -18,7 +18,11 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys.map((key) => key !== CACHE_NAME ? caches.delete(key) : null)
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
       )
     )
   );
