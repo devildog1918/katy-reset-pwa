@@ -14,7 +14,11 @@
   <meta name="apple-mobile-web-app-title" content="Katy Reset" />
 
   <title>Katy ISD Password Reset</title>
-
+  
+<button id="installBtn" class="btn secondary" style="display:none;">
+  Install App
+</button>
+  
   <style>
     :root{
       --brand:#9f3323;
@@ -156,7 +160,35 @@
       </div>
     </div>
   </div>
+<script>
+  let deferredPrompt = null;
+  const installBtn = document.getElementById("installBtn");
 
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "block";
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.style.display = "none";
+  });
+
+  window.addEventListener("appinstalled", () => {
+    installBtn.style.display = "none";
+    deferredPrompt = null;
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js");
+    });
+  }
+</script>
   <script>
     // Outage banner via URL:
     // ?outage=1&msg=Password%20reset%20may%20be%20temporarily%20unavailable
