@@ -3,53 +3,179 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0b5fff" />
+  <meta name="theme-color" content="#9f3323" />
+
   <link rel="manifest" href="./manifest.json" />
- <link rel="apple-touch-icon" href="./icons/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Katy Reset"> <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="icon" href="./icons/icon-192.png" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Katy Reset" />
+
   <title>Katy ISD Password Reset</title>
 
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background:#f2f2f2; }
-    .wrap { max-width: 680px; margin: 40px auto; padding: 0 16px; }
-    .card { background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 6px 24px rgba(0,0,0,.08); }
-    h1 { margin: 0 0 8px; font-size: 22px; }
-    p { margin: 0 0 14px; color:#333; line-height: 1.35; }
-    a.btn { display:inline-block; background:#0b5fff; color:#fff; text-decoration:none; padding: 12px 14px; border-radius: 12px; font-weight: 700; }
-    .small { margin-top: 10px; font-size: 12px; color:#666; }
+    :root{
+      --brand:#9f3323;
+      --bg:#f2f2f2;
+      --card:#ffffff;
+      --text:#222222;
+      --muted:#666666;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .header {
+      background: var(--brand);
+      color: #ffffff;
+      padding: 18px 16px;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .wrap {
+      max-width: 720px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .banner {
+      display: none;
+      background: var(--brand);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.08);
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+
+    p, li {
+      line-height: 1.45;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      max-width: 320px;
+      margin: 18px auto 0;
+      background: var(--brand);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      color: var(--brand);
+      border: 2px solid var(--brand);
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
   </style>
 </head>
 <body>
+  <div class="header">Katy ISD Password Reset</div>
+
   <div class="wrap">
+    <div id="outageBanner" class="banner"></div>
+
     <div class="card">
       <h1>Katy ISD Password Reset</h1>
-      <p>Tap the button to open the password reset site.</p>
+      <p>Use the button below to open the official ClassLink password reset page.</p>
 
-      <!-- CHANGE THIS URL to your real reset URL -->
-    <a class="btn"
-   href="https://launchpad.classlink.com/resetpassword?scode=katyisd"
-  Open Reset Site
-</a>
-      <div class="small" id="installStatus">Install status: checking…</div>
+      <a class="btn"
+         href="https://launchpad.classlink.com/resetpassword?scode=katyisd"
+         target="_blank"
+         rel="noopener noreferrer">
+         Reset Password
+      </a>
+
+      <a class="btn secondary"
+         href="tel:2812374357">
+         Call Help Desk
+      </a>
+
+      <p class="small">Help Desk: (281) 237-HELP (4357)</p>
+
+      <div class="section">
+        <h3>Password Requirements</h3>
+        <ul>
+          <li>Must be at least twelve characters long</li>
+          <li>Cannot reuse any of the prior 20 passwords</li>
+          <li>Must contain each of the following:
+            <ul>
+              <li>Uppercase letters</li>
+              <li>Lowercase letters</li>
+              <li>Numbers</li>
+              <li>Special characters</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3>Install on your phone</h3>
+        <p><strong>Android:</strong> Chrome → menu → Install app / Add to Home screen</p>
+        <p><strong>iPhone:</strong> Safari → Share → Add to Home Screen</p>
+      </div>
     </div>
   </div>
 
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("./sw.js")
-      .then(function () {
-        document.getElementById("installStatus").textContent =
-          "Install status: service worker active";
-      })
-      .catch(function () {
-        document.getElementById("installStatus").textContent =
-          "Install status: service worker failed";
+  <script>
+    // Outage banner via URL:
+    // ?outage=1&msg=Password%20reset%20may%20be%20temporarily%20unavailable
+    const params = new URLSearchParams(window.location.search);
+    const outage = params.get("outage");
+    const msg = params.get("msg");
+
+    if (outage === "1") {
+      const banner = document.getElementById("outageBanner");
+      banner.textContent = msg || "Service notice: Password reset may be temporarily unavailable.";
+      banner.style.display = "block";
+    }
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js");
       });
-  });
-}
-</script>
+    }
+  </script>
 </body>
 </html>
