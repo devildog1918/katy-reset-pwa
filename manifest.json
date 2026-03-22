@@ -1,6 +1,6 @@
 {
   "id": "./index.html",
-  "name": "Katy ISD Password Reset",
+  "name": "KatyISD Password Reset",
   "short_name": "Katy Reset",
   "start_url": "./index.html",
   "scope": "./",
