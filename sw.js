@@ -1,4 +1,4 @@
-const CACHE_NAME = "katy-reset-v6";
+const CACHE_NAME = "katy-reset-v7";
 const ASSETS = [
   "./",
   "./index.html",
