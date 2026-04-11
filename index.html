@@ -139,10 +139,6 @@
       text-align: center;
     }
 
-    .section {
-      margin-top: 20px;
-    }
-
     .install-note {
       margin-top: 14px;
       font-size: 14px;
@@ -159,8 +155,8 @@
     }
 
     .generator-select,
-    .generator-input,
-    .generator-output {
+    .generator-output,
+    .rules-select {
       width: 100%;
       padding: 12px;
       border: 1px solid var(--border);
@@ -172,6 +168,14 @@
     .generator-output {
       background: #fafafa;
       color: var(--text);
+    }
+
+    .rules-box {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fafafa;
     }
 
     @media (max-width: 640px) {
@@ -243,20 +247,6 @@
         </select>
 
         <input
-          id="firstName"
-          class="generator-input"
-          type="text"
-          placeholder="First name (optional but recommended)"
-        />
-
-        <input
-          id="lastName"
-          class="generator-input"
-          type="text"
-          placeholder="Last name (optional but recommended)"
-        />
-
-        <input
           id="generatedPassword"
           class="generator-output"
           type="text"
@@ -278,19 +268,16 @@
       </div>
 
       <div id="rulesView" class="view">
-        <h2>Password Requirements</h2>
-        <ul>
-          <li>Must be at least twelve characters long</li>
-          <li>Cannot reuse any of the prior 20 passwords</li>
-          <li>Must contain each of the following:
-            <ul>
-              <li>Uppercase letters</li>
-              <li>Lowercase letters</li>
-              <li>Numbers</li>
-              <li>Special characters</li>
-            </ul>
-          </li>
-        </ul>
+        <h2>Password Rules</h2>
+        <p>Select your user type to view the rules that apply.</p>
+
+        <select id="rulesUserType" class="rules-select" onchange="updateRulesDisplay()">
+          <option value="staff">Staff</option>
+          <option value="parent">Parent</option>
+          <option value="student">Student</option>
+        </select>
+
+        <div id="rulesContent" class="rules-box"></div>
       </div>
 
       <div id="aboutView" class="view">
@@ -350,12 +337,38 @@
       deferredPrompt = null;
     });
 
+    // Password rules display
+    function updateRulesDisplay() {
+      const type = document.getElementById("rulesUserType").value;
+      const rulesContent = document.getElementById("rulesContent");
+
+      const minLength = type === "student" ? 8 : 12;
+
+      rulesContent.innerHTML = `
+        <ul>
+          <li>Minimum length: ${minLength} characters</li>
+          <li>Maximum length: 99 characters</li>
+          <li>At least 1 uppercase letter</li>
+          <li>At least 1 lowercase letter</li>
+          <li>At least 1 number</li>
+          <li>At least 1 special character</li>
+          <li>No more than 2 identical characters in a row</li>
+          <li>No sequences longer than 2 characters (example: 123 or abc)</li>
+          <li>Cannot use common prohibited words</li>
+          <li>Cannot use your first or last name</li>
+        </ul>
+      `;
+    }
+
     // Password generator rules
-    function generateStrongPassword(minLength, firstName = "", lastName = "") {
+    function generateStrongPassword(minLength) {
       const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
       const lower = "abcdefghijkmnopqrstuvwxyz";
       const numbers = "23456789";
-      const special = "!@#$%^&*()-_=+?";
+
+      // Removed forbidden characters: / \ " ' | ^ [ ] { } < > + =
+      const special = "!@#$%&*()-_?.:,;";
+
       const all = upper + lower + numbers + special;
 
       const blockedWords = [
@@ -398,14 +411,8 @@
         return false;
       }
 
-      function containsBlockedWord(password, firstName, lastName) {
+      function containsBlockedWord(password) {
         const lowerPwd = password.toLowerCase();
-        const first = firstName.trim().toLowerCase();
-        const last = lastName.trim().toLowerCase();
-
-        if (first && lowerPwd.includes(first)) return true;
-        if (last && lowerPwd.includes(last)) return true;
-
         return blockedWords.some(word => lowerPwd.includes(word));
       }
 
@@ -429,10 +436,10 @@
           /[A-Z]/.test(password) &&
           /[a-z]/.test(password) &&
           /[0-9]/.test(password) &&
-          /[!@#$%^&*()\-\_=+\?]/.test(password) &&
+          /[!@#$%&*()\-_?.:,;]/.test(password) &&
           !hasTripleRepeat(password) &&
           !hasBadSequence(password) &&
-          !containsBlockedWord(password, firstName, lastName);
+          !containsBlockedWord(password);
 
         if (valid) {
           return password;
@@ -442,16 +449,13 @@
 
     function generateByType() {
       const type = document.getElementById("userType").value;
-      const firstName = document.getElementById("firstName").value;
-      const lastName = document.getElementById("lastName").value;
-
       let minLength = 12;
 
       if (type === "student") {
         minLength = 8;
       }
 
-      const password = generateStrongPassword(minLength, firstName, lastName);
+      const password = generateStrongPassword(minLength);
       document.getElementById("generatedPassword").value = password;
     }
 
@@ -463,6 +467,9 @@
       field.setSelectionRange(0, 99999);
       document.execCommand("copy");
     }
+
+    // Initialize rules on load
+    updateRulesDisplay();
 
     // Service worker
     if ("serviceWorker" in navigator) {
