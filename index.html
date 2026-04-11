@@ -158,6 +158,21 @@
       margin-top: 14px;
     }
 
+    .generator-select,
+    .generator-output {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .generator-output {
+      background: #fafafa;
+      color: var(--text);
+    }
+
     @media (max-width: 640px) {
       .header {
         font-size: 18px;
@@ -174,6 +189,7 @@
     <div class="tabs">
       <button class="tab-btn active" data-view="homeView">Home</button>
       <button class="tab-btn" data-view="helpView">Help</button>
+      <button class="tab-btn" data-view="generatorView">Password Help</button>
       <button class="tab-btn" data-view="rulesView">Password Rules</button>
       <button class="tab-btn" data-view="aboutView">About</button>
     </div>
@@ -181,7 +197,7 @@
     <div class="card">
       <div id="homeView" class="view active">
         <h1>KatyISD Password Reset</h1>
-       <p>Use the button below to reset your KatyISD password</p>
+        <p>Use the button below to reset your KatyISD password</p>
        
         <a class="btn"
            href="https://launchpad.classlink.com/resetpassword?scode=katyisd"
@@ -193,15 +209,57 @@
           Install on your device
         </button>
 
-      <div class="install-note">
-        <strong>Install on your device:</strong><br>
-         Android: Tap "Install on your device" or use the menu<br>
-         iPhone: Tap Share → Add to Home Screen
-      </div>
+        <div class="install-note">
+          <strong>Install on your device:</strong><br>
+          Android: Tap "Install on your device" or use the menu<br>
+          iPhone: Tap Share → Add to Home Screen
+        </div>
 
-       <div class="status-box">
+        <div class="status-box">
           You will be redirected to the official KatyISD password reset page
         </div>
+      </div>
+
+      <div id="helpView" class="view">
+        <h2>Help Desk</h2>
+        <p>Need help? Contact the KatyISD Technology Help Desk</p>
+
+        <a class="btn secondary" href="tel:2812374357">
+          Call Help Desk
+        </a>
+
+        <p class="small">Help Desk: (281) 237-HELP (4357)</p>
+      </div>
+
+      <div id="generatorView" class="view">
+        <h2>Password Help</h2>
+        <p>Select your user type, then generate a strong password suggestion.</p>
+
+        <select id="userType" class="generator-select">
+          <option value="staff">Staff</option>
+          <option value="parent">Parent</option>
+          <option value="student">Student</option>
+        </select>
+
+        <input
+          id="generatedPassword"
+          class="generator-output"
+          type="text"
+          readonly
+          placeholder="Your generated password will appear here"
+        />
+
+        <button class="btn" onclick="generateByType()">
+          Generate Password
+        </button>
+
+        <button class="btn secondary" onclick="copyGeneratedPassword()">
+          Copy Password
+        </button>
+
+        <p class="small">
+          Password requirements are enforced during reset and may vary by user type.
+        </p>
       </div>
 
       <div id="rulesView" class="view">
@@ -220,21 +278,10 @@
         </ul>
       </div>
 
-      <div id="helpView" class="view">
-        <h2>Help Desk</h2>
-        <p>Need help? Contact the KatyISD Technology Help Desk</p>
-
-        <a class="btn secondary" href="tel:2812374357">
-          Call Help Desk
-        </a>
-
-        <p class="small">Help Desk: (281) 237-HELP (4357)</p>
-      </div>
-
       <div id="aboutView" class="view">
         <h2>About This App</h2>
-          <p>This app gives you quick access to KatyISD password reset.</p>
-          <p>You will be taken to the official password reset page to complete the process.</p>
+        <p>This app gives you quick access to KatyISD password reset.</p>
+        <p>You will be taken to the official password reset page to complete the process.</p>
       </div>
     </div>
   </div>
@@ -288,6 +335,98 @@
       installBtn.style.display = "none";
       deferredPrompt = null;
     });
+
+    // Password generator
+    function generateStrongPassword(length = 16) {
+      const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+      const lower = "abcdefghijkmnopqrstuvwxyz";
+      const numbers = "23456789";
+      const special = "!@#$%^&*()-_=+?";
+
+      const all = upper + lower + numbers + special;
+
+      function pick(str) {
+        return str[Math.floor(Math.random() * str.length)];
+      }
+
+      function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      function hasBadSequence(password) {
+        const badPatterns = [
+          "1234", "2345", "3456", "4567", "5678", "6789",
+          "abcd", "bcde", "cdef", "defg",
+          "qwer", "asdf", "zxcv"
+        ];
+        const lowerPwd = password.toLowerCase();
+        return badPatterns.some(pattern => lowerPwd.includes(pattern));
+      }
+
+      function hasTripleRepeat(password) {
+        return /(.)\1\1/.test(password);
+      }
+
+      while (true) {
+        const chars = [
+          pick(upper), pick(upper),
+          pick(lower), pick(lower),
+          pick(numbers), pick(numbers),
+          pick(special), pick(special)
+        ];
+
+        while (chars.length < length) {
+          chars.push(pick(all));
+        }
+
+        const password = shuffle(chars).join("");
+
+        const valid =
+          password.length === length &&
+          /[A-Z]/.test(password) &&
+          /[a-z]/.test(password) &&
+          /[0-9]/.test(password) &&
+          /[!@#$%^&*()\-\_=+\?]/.test(password) &&
+          !hasBadSequence(password) &&
+          !hasTripleRepeat(password);
+
+        if (valid) {
+          return password;
+        }
+      }
+    }
+
+    function generateByType() {
+      const type = document.getElementById("userType").value;
+
+      let length = 16;
+
+      // Staff and Parent = same
+      if (type === "staff" || type === "parent") {
+        length = 16;
+      }
+
+      // Student = slightly shorter suggestion
+      if (type === "student") {
+        length = 14;
+      }
+
+      const password = generateStrongPassword(length);
+      document.getElementById("generatedPassword").value = password;
+    }
+
+    function copyGeneratedPassword() {
+      const field = document.getElementById("generatedPassword");
+      if (!field.value) return;
+
+      field.select();
+      field.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+    }
 
     // Service worker
     if ("serviceWorker" in navigator) {
